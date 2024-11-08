@@ -1,0 +1,13 @@
+### Install Azure CLI
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+az login --tenant MngEnv914318.onmicrosoft.com
+
+echo $SQL_CONNECTIONSTRING_ENV_VAR
+
+# adding webapp
+dotnet new blazor -au Individual -int Server 
+dotnet new sln -n webAppSln
+dotnet sln webAppSln.sln add WebApp/WebApp.csproj
+
+dotnet add package Microsoft.AspNetCore.Authentication.MicrosoftAccount 
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer 
