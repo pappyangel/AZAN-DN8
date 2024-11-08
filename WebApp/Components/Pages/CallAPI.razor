@@ -1,0 +1,77 @@
+@page "/callapi"
+@using Microsoft.AspNetCore.Components
+@using System.Net.Http.Headers;
+@using System.Text.Json;
+@rendermode InteractiveServer
+@inject IHttpClientFactory _ClientFactory
+
+<PageTitle>Call API</PageTitle>
+<h3>API Endpoint Entry</h3>
+
+<p>Enter the desired API endpoint:</p>
+
+<label for="baseUrl">@baseURL</label>
+<input @bind="endpoint" placeholder="Enter API endpoint" />
+<button @onclick="CallApi">Call API</button>
+
+<p>Current Endpoint: @endpoint</p>
+<p>Full API URL: @apiURL</p>
+<p>Response from API: @apiResponse</p>
+
+@code {
+    private string endpoint = string.Empty;
+    private string baseURL = "http://localhost:5237/";
+    private string apiURL = string.Empty;
+    private string apiResponse = string.Empty;
+
+    private async Task CallApi()
+    {
+        // Logic to call the API using the endpoint variable
+        apiURL = baseURL + endpoint;
+        Console.WriteLine($"Calling API at: {apiURL}");
+
+        using HttpClient apiClient = _ClientFactory.CreateClient();
+
+        var request = new HttpRequestMessage(HttpMethod.Get, apiURL);
+
+        try
+        {
+            var response1 = await apiClient.SendAsync(request);
+
+            switch (response1.StatusCode)
+            {
+                case System.Net.HttpStatusCode.OK:
+                    apiResponse = await response1.Content.ReadAsStringAsync();
+                    break;
+                case System.Net.HttpStatusCode.NoContent:
+                    apiResponse = "No content";
+                    break;
+                case System.Net.HttpStatusCode.NotFound:
+                    apiResponse = "API Route not found!";
+                    break;
+                case System.Net.HttpStatusCode.Forbidden:
+                    apiResponse = "Your Access to this API route is Forbidden!";
+                    break;
+                case System.Net.HttpStatusCode.Unauthorized:
+                    apiResponse = "Your Access to this API route is Unauthorized!";
+                    break;
+                default:
+                    apiResponse = "Unhandled Error!";
+                    break;
+            }
+        }
+        catch (Exception Ex)
+        {
+            // Opps! Did we forget to start the API?!?
+            apiResponse = Ex.Message;
+            apiResponse = "API not available";
+            // throw;
+        }
+
+
+
+
+
+
+    }
+}
