@@ -11,3 +11,10 @@ dotnet sln webAppSln.sln add WebApp/WebApp.csproj
 
 dotnet add package Microsoft.AspNetCore.Authentication.MicrosoftAccount 
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer 
+
+# adding webapi
+dotnet new webapi
+dotnet new sln -n WebAPISln
+dotnet sln WebAPISln.sln add WebAPI/WebAPI.csproj
+
+
